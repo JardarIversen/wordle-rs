@@ -5,12 +5,12 @@ use word_reader::get_words_by_length;
 use word_validation::get_random_word;
 
 fn main() {
-    let game_char_amount = 5;
+    let game_char_amount = 3;
 
     let possible_words = get_words_by_length(game_char_amount, "top-20k-words.txt")
         .expect("Failed to read word file. Make sure 'top-20k-words.txt' is in the root directory.");
 
-    let word_to_guess_option = get_random_word(&possible_words);
+    let word_to_guess_option = get_random_word(&possible_words, game_char_amount);
 
     println!("Game characters: {}", game_char_amount);
     println!("Amount of possible words: {}", possible_words.len());

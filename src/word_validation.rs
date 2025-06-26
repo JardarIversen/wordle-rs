@@ -1,23 +1,29 @@
 use rand::seq::SliceRandom;
 
-/// Selects a single random word from a slice of words.
+/// Selects a single random word from a slice of words, using a smaller, more common
+/// subset of the list for longer words to adjust difficulty.
 ///
 /// # Arguments
 ///
-/// * `words` - A slice of String objects to choose from. This is a borrow.
+/// * `words` - A slice of String objects to choose from, assumed to be sorted
+///             from most common to least common.
+/// * `word_length` - The length of the word we're looking for.
 ///
 /// # Returns
 ///
 /// An `Option<&str>` which is:
-/// - `Some(&str)` containing a reference to a random word if the slice is not empty.
+/// - `Some(&str)` containing a reference to a random word.
 /// - `None` if the input slice is empty.
-pub fn get_random_word(words: &[String]) -> Option<&str> {
-    // .choose() is a convenient method from the SliceRandom trait.
-    // It picks one random element from a slice and returns it as an Option,
-    // which is Some(&item) if the slice is not empty, and None if it is.
-    // It returns an Option<&String>, so we use .map() to convert the inner
-    // value from &String to &str.
-    words.choose(&mut rand::thread_rng()).map(String::as_str)
+pub fn get_random_word(words: &[String], word_length: usize) -> Option<&str> {
+    // We create a new variable `search_pool` that is a slice of the original `words` data.
+    let search_pool = if word_length >= 5 {
+        &words[0..1000.min(words.len())]
+    } else if word_length == 4 {
+        &words[0..700.min(words.len())]
+    } else {
+        &words[0..500.min(words.len())]
+    };
+    search_pool.choose(&mut rand::thread_rng()).map(String::as_str)
 }
 
 #[cfg(test)]
