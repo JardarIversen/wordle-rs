@@ -18,6 +18,12 @@ fn main() {
     match word_to_guess_option {
         Some(word) => {
             println!("Word to guess this game is: {}", word);
+            println!(
+                "This is word {}/{} for {} letters.",
+                possible_words.iter().position(|w| w == word).unwrap(),
+                possible_words.len() ,
+                game_char_amount
+            );
         }
         None => {
             println!("Could not select a word because the list of possible words is empty!");
